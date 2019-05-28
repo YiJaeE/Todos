@@ -5,6 +5,7 @@ let todos = [
   { id: 3, content: 'Javascript', completed: false }
 ];
 
+
 const $todos = document.querySelector('.todos');
 const $btn = document.querySelector('.btn');
 const $inputTodo = document.querySelector('.input-todo');
@@ -13,7 +14,9 @@ const $clearLength = document.querySelector('.completed-todos');
 const $activeTodo = document.querySelector('.active-todos');
 const $nav = document.querySelector('.nav');
 
+// todos 복사
 let _todos = [...todos];
+// li의 id 값
 let navState = 'all';
 
 
@@ -38,11 +41,11 @@ function render() {
   $activeTodo.innerHTML = todos.filter(() => todos).length;
 }
 
-// 함수로 만든 id값 => 새로운 배열 추가하기
+
+// 새로운 배열 추가
 function generateId() {
   return todos.length ? Math.max(...todos.map(todo => todo.id)) + 1 : 1;
 }
-
 
 // 엔터키 눌렀을 때 todo 추가
 $inputTodo.onkeyup = function (e) {
@@ -54,7 +57,7 @@ $inputTodo.onkeyup = function (e) {
   render();
 };
 
-// 체인지 이벤트
+// 상태 변경
 $todos.onchange = function (e) {
   const id = +e.target.parentNode.id;
   todos = todos.map(todo => (todo.id === id ? Object.assign({}, todo, { completed: !todo.completed }) : todo));
@@ -68,6 +71,7 @@ $nav.onclick = function (e) {
     navItem.classList.remove('active');
   });
   e.target.classList.add('active');
+  // 각 카테고리 id 값 할당
   navState = e.target.id;
   render();
 };
