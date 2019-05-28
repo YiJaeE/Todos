@@ -45,8 +45,9 @@ function generateId() {
 $inputTodo.onkeyup = function (e) {
   const content = $inputTodo.value.trim();
   if (content === '' || e.keyCode !== 13) return;
-  $inputTodo.value = '';
+
   // 나중에 추가한 todo가 가장 위에 오도록
+  $inputTodo.value = '';
   todos = [{ id: generateId(), content, completed: false }, ...todos];
   render();
 };
@@ -79,4 +80,4 @@ $btn.onclick = function () {
   render();
 };
 
-render();
+render()
