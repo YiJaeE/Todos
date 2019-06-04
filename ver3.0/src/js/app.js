@@ -35,17 +35,17 @@ function render(todosFromServer) {
   $activeTodo.innerHTML = todos.filter(() => todos).length;
 }
 
-// 새로운 배열 추가
-function generateId() {
-  return todos.length ? Math.max(...todos.map(todo => todo.id)) + 1 : 1;
-}
-
 // Todo 가져오기
 function getTodos() {
   fetch('/todos')
     .then(res => res.json())
     .then(render)
     .catch(console.error);
+}
+
+// 새로운 배열 추가
+function generateId() {
+  return todos.length ? Math.max(...todos.map(todo => todo.id)) + 1 : 1;
 }
 
 // Todo 추가하기
