@@ -6,9 +6,7 @@ const $clearLength = document.querySelector('.completed-todos');
 const $activeTodo = document.querySelector('.active-todos');
 const $nav = document.querySelector('.nav');
 
-// todos 배열
 let todos = [];
-// li의 id 값
 let navState = 'all';
 
 // html 렌더링
@@ -37,6 +35,10 @@ function render(todosFromServer) {
   $activeTodo.innerHTML = todos.filter(() => todos).length;
 }
 
+// 새로운 배열 추가
+function generateId() {
+  return todos.length ? Math.max(...todos.map(todo => todo.id)) + 1 : 1;
+}
 
 // Todo 가져오기
 function getTodos() {
@@ -59,34 +61,30 @@ function addTodo(content) {
 }
 
 // 체크박스 상태 변경
-function changeCheck(targetID) {
-  todos.forEach((todo) => {
-    if (todo.id === +targetID) {
-      fetch(`/todos/${targetID}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ completed: !todo.completed })
-      }).then(res => res.json())
-        .then(render)
-        .catch(console.error);
-    }
-  });
+function changeCheck(id, completed) {
+  fetch(`/todos/${id}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ completed })
+  }).then(res => res.json())
+    .then(render)
+    .catch(console.error);
 }
 
 // 체크박스 전체 선택
-function changeAll(complete) {
+function changeAll(completed) {
   fetch('/todos', {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ completed: complete.checked })
+    body: JSON.stringify({ completed: completed.checked })
   }).then(res => res.json())
     .then(render)
     .catch(console.error);
 }
 
 // x 클릭시 삭제
-function removeTodo(targetID) {
-  fetch(`/todos/${targetID}`, {
+function removeTodo(id) {
+  fetch(`/todos/${id}`, {
     method: 'DELETE'
   }).then(res => res.json())
     .then(render)
@@ -102,12 +100,6 @@ function clearAll() {
     .catch(console.error);
 }
 
-
-// 새로운 배열 추가
-function generateId() {
-  return todos.length ? Math.max(...todos.map(todo => todo.id)) + 1 : 1;
-}
-
 // 로딩
 window.onload = () => { getTodos(); };
 
@@ -121,7 +113,8 @@ $inputTodo.onkeyup = function (e) {
 
 // 상태 변경
 $todos.onchange = function (e) {
-  changeCheck(e.target.parentNode.id);
+  const id = +e.target.parentNode.id;
+  changeCheck(id, e.target.checked);
 };
 
 // 카테고리 액티브 클래스
