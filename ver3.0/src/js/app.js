@@ -8,17 +8,12 @@ const $nav = document.querySelector('.nav');
 
 // todos 배열
 let todos = [];
-
-// todos 복사
-// let _todos = [...todos];
 // li의 id 값
 let navState = 'all';
 
 // html 렌더링
 function render(todosFromServer) {
   todos = todosFromServer;
-  // console.log('todosFromServer', todosFromServer);
-  // console.log('todos', todos);
   let html = '';
 
   function changeRender(changeTodos) {
@@ -46,7 +41,6 @@ function render(todosFromServer) {
 // Todo 가져오기
 function getTodos() {
   fetch('/todos')
-    // response 객체 내에서 todos 배열만 가져와서 렌더하기
     .then(res => res.json())
     .then(render)
     .catch(console.error);
@@ -122,30 +116,13 @@ $inputTodo.onkeyup = function (e) {
   const content = $inputTodo.value.trim();
   if (!content || e.keyCode !== 13) return;
   addTodo(content);
-  // 나중에 추가한 todo가 가장 위에 오도록
   $inputTodo.value = '';
-  // todos = [{ id: generateId(), content, completed: false }, ...todos];
-  // render();
 };
-
-// $inputTodo.addEventListener('keyup', (e) => {
-//   const content = $inputTodo.value.trim();
-//   if (!content || e.keyCode !== 13) return;
-//   addTodo(content);
-//   $inputTodo.value = '';
-// });
 
 // 상태 변경
 $todos.onchange = function (e) {
-  // const id = +e.target.parentNode.id;
   changeCheck(e.target.parentNode.id);
-  // todos = todos.map(todo => (todo.id === id ? Object.assign({}, todo, { completed: !todo.completed }) : todo));
-  // render();
 };
-
-// $todos.addEventListener('change', (e) => {
-//   changeCheck(e.target.parentNode.id);
-// });
 
 // 카테고리 액티브 클래스
 $nav.onclick = function (e) {
@@ -154,7 +131,6 @@ $nav.onclick = function (e) {
     navItem.classList.remove('active');
   });
   e.target.classList.add('active');
-  // 각 카테고리 id 값 할당
   navState = e.target.id;
   render(todos);
 };
@@ -162,34 +138,15 @@ $nav.onclick = function (e) {
 // 클릭시 remove
 $todos.onclick = function (e) {
   if (!e.target.classList.contains('remove-todo')) return;
-  // todos = todos.filter(todo => todo.id !== +e.target.parentNode.id);
   removeTodo(e.target.parentNode.id);
 };
 
-// $todos.addEventListener('click', (e) => {
-//   if (!e.target.classList.contains('remove-todo')) return;
-//   removeTodo(e.target.parentNode.id);
-// });
-
 // 클릭시 전체 선택&해제
 $completeAll.onchange = function (e) {
-  // if (e.target.checked) todos = todos.map(todo => Object.assign({}, todo, { completed: true }));
-  // else todos = todos.map(todo => Object.assign({}, todo, { completed: false }));
   changeAll(e.target);
 };
 
-// $completeAll.addEventListener('change', (e) => {
-//   changeAll(e.target);
-// });
-
 // 클릭시 체크된 todo 삭제
 $btn.onclick = function () {
-  // todos = todos.filter(todo => todo.completed !== true);
   clearAll();
 };
-
-// $btn.addEventListener('click', (e) => {
-//   clearAll(e.target);
-// });
-
-// render(todos);
