@@ -10312,6 +10312,13 @@
     $activeTodo.innerHTML = todos.filter(function () {
       return todos;
     }).length;
+  } // 새로운 배열 추가
+  
+  
+  function generateId() {
+    return todos.length ? Math.max.apply(Math, _toConsumableArray(todos.map(function (todo) {
+      return todo.id;
+    }))) + 1 : 1;
   } // Todo 가져오기
   
   
@@ -10340,33 +10347,29 @@
   } // 체크박스 상태 변경
   
   
-  function changeCheck(targetID) {
-    todos.forEach(function (todo) {
-      if (todo.id === +targetID) {
-        fetch("/todos/".concat(targetID), {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            completed: !todo.completed
-          })
-        }).then(function (res) {
-          return res.json();
-        }).then(render)["catch"](console.error);
-      }
-    });
+  function changeCheck(id, completed) {
+    fetch("/todos/".concat(id), {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        completed: completed
+      })
+    }).then(function (res) {
+      return res.json();
+    }).then(render)["catch"](console.error);
   } // 체크박스 전체 선택
   
   
-  function changeAll(complete) {
+  function changeAll(completed) {
     fetch('/todos', {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        completed: complete.checked
+        completed: completed.checked
       })
     }).then(function (res) {
       return res.json();
@@ -10374,8 +10377,8 @@
   } // x 클릭시 삭제
   
   
-  function removeTodo(targetID) {
-    fetch("/todos/".concat(targetID), {
+  function removeTodo(id) {
+    fetch("/todos/".concat(id), {
       method: 'DELETE'
     }).then(function (res) {
       return res.json();
@@ -10389,13 +10392,6 @@
     }).then(function (res) {
       return res.json();
     }).then(render)["catch"](console.error);
-  } // 새로운 배열 추가
-  
-  
-  function generateId() {
-    return todos.length ? Math.max.apply(Math, _toConsumableArray(todos.map(function (todo) {
-      return todo.id;
-    }))) + 1 : 1;
   } // 로딩
   
   
@@ -10421,8 +10417,8 @@
   
   
   $todos.onchange = function (e) {
-    // const id = +e.target.parentNode.id;
-    changeCheck(e.target.parentNode.id); // todos = todos.map(todo => (todo.id === id ? Object.assign({}, todo, { completed: !todo.completed }) : todo));
+    var id = +e.target.parentNode.id;
+    changeCheck(id, e.target.checked); // todos = todos.map(todo => (todo.id === id ? Object.assign({}, todo, { completed: !todo.completed }) : todo));
     // render();
   }; // $todos.addEventListener('change', (e) => {
   //   changeCheck(e.target.parentNode.id);
