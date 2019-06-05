@@ -1,43 +1,46 @@
 const $todos = document.querySelector('.todos');
-const $btn = document.querySelector('.btn');
+const $clearCompleted = document.querySelector('.btn');
 const $inputTodo = document.querySelector('.input-todo');
 const $completeAll = document.querySelector('#ck-complete-all');
-const $clearLength = document.querySelector('.completed-todos');
-const $activeTodo = document.querySelector('.active-todos');
+const $clearTodoLength = document.querySelector('.completed-todos');
+const $activeTodoLength = document.querySelector('.active-todos');
 const $nav = document.querySelector('.nav');
-
+// todos 배열
 let todos = [];
+// li의 id 값
 let navState = 'all';
+
 
 // html 렌더링
 function render(todosFromServer) {
   todos = todosFromServer;
+
   let html = '';
 
-  function changeRender(changeTodos) {
-    let _todos = '';
-    changeTodos.forEach(({ id, content, completed }) => {
-      _todos += `<li id="${id}" class="todo-item"><input class="custom-checkbox" type="checkbox"${completed ? 'checked' : ''} id="ck-${id}"><label for="ck-${id}"> ${content} </label><i class="remove-todo far fa-times-circle"></i></li>`;
-    });
-    return _todos;
-  }
+  const _todos = todos.filter(todo => {
+    if (navState === 'active') return !todo.completed;
+    if (navState === 'completed') return todo.completed;
+    return true;
+  });
 
-  if (navState === 'all') {
-    html = changeRender(todos);
-  } else if (navState === 'active') {
-    html = changeRender(todos.filter(todo => !todo.completed));
-  } else {
-    html = changeRender(todos.filter(todo => todo.completed));
-  }
+  _todos.forEach(({ id, content, completed }) => {
+    html += `<li id="${id}" class="todo-item">
+    <input class="custom-checkbox" type="checkbox"${completed ? 'checked' : ''} id="ck-${id}">
+    <label for="ck-${id}"> ${content} </label>
+    <i class="remove-todo far fa-times-circle"></i>
+    </li>`;
+  });
 
   $todos.innerHTML = html;
-  $clearLength.innerHTML = todos.filter(todo => todo.completed).length;
-  $activeTodo.innerHTML = todos.filter(() => todos).length;
+  $clearTodoLength.innerHTML = todos.filter(todo => todo.completed).length;
+  $activeTodoLength.innerHTML = todos.filter(() => todos).length;
 }
+
 
 // Todo 가져오기
 function getTodos() {
   fetch('/todos')
+    // response 객체 내에서 todos 배열만 가져와서 렌더하기
     .then(res => res.json())
     .then(render)
     .catch(console.error);
@@ -100,8 +103,10 @@ function clearAll() {
     .catch(console.error);
 }
 
+
 // 로딩
 window.onload = () => { getTodos(); };
+
 
 // 엔터키 눌렀을 때 todo 추가
 $inputTodo.onkeyup = function (e) {
@@ -124,6 +129,7 @@ $nav.onclick = function (e) {
     navItem.classList.remove('active');
   });
   e.target.classList.add('active');
+  // 각 카테고리 id 값 할당
   navState = e.target.id;
   render(todos);
 };
@@ -140,6 +146,6 @@ $completeAll.onchange = function (e) {
 };
 
 // 클릭시 체크된 todo 삭제
-$btn.onclick = function () {
+$clearCompleted.onclick = function () {
   clearAll();
 };
