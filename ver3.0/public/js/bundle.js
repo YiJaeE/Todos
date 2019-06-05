@@ -10263,18 +10263,37 @@
   function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
   
   var $todos = document.querySelector('.todos');
-  var $btn = document.querySelector('.btn');
+  var $clearCompleted = document.querySelector('.btn');
   var $inputTodo = document.querySelector('.input-todo');
   var $completeAll = document.querySelector('#ck-complete-all');
-  var $clearLength = document.querySelector('.completed-todos');
-  var $activeTodo = document.querySelector('.active-todos');
+  var $clearTodoLength = document.querySelector('.completed-todos');
+  var $activeTodoLength = document.querySelector('.active-todos');
   var $nav = document.querySelector('.nav'); // todos 배열
   
   var todos = []; // todos 복사
   // let _todos = [...todos];
   // li의 id 값
   
-  var navState = 'all'; // html 렌더링
+  var navState = 'all'; // function render(todosFromServer) {
+  //   let html = '';
+  //   todos = todosFromServer;
+  //   const _todos = todos.filter(todo => {
+  //     if (navState === 'active') return !todo.completed;
+  //     if (navState === 'completed') return todo.completed;
+  //     return true;
+  //   });
+  //   _todos.forEach(todo => {
+  //     html += `<li id="${todo.id}" class="todo-item">
+  //     <input id="ck-${todo.id}" class="custom-checkbox" type="checkbox" ${todo.completed ? 'checked' : ''}>
+  //     <label for="ck-${todo.id}">${todo.content}</label>
+  //     <i class="remove-todo far fa-times-circle"></i>
+  //   </li>\n`;
+  //   });
+  //   $todos.innerHTML = html;
+  //   completedTodos();
+  //   activeTodos();
+  // }
+  // html 렌더링
   
   function render(todosFromServer) {
     todos = todosFromServer; // console.log('todosFromServer', todosFromServer);
@@ -10282,43 +10301,26 @@
   
     var html = '';
   
-    function changeRender(changeTodos) {
-      var _todos = '';
-      changeTodos.forEach(function (_ref) {
-        var id = _ref.id,
-            content = _ref.content,
-            completed = _ref.completed;
-        _todos += "<li id=\"".concat(id, "\" class=\"todo-item\"><input class=\"custom-checkbox\" type=\"checkbox\"").concat(completed ? 'checked' : '', " id=\"ck-").concat(id, "\"><label for=\"ck-").concat(id, "\"> ").concat(content, " </label><i class=\"remove-todo far fa-times-circle\"></i></li>");
-      });
-      return _todos;
-    }
+    var _todos = todos.filter(function (todo) {
+      if (navState === 'active') return !todo.completed;
+      if (navState === 'completed') return todo.completed;
+      return true;
+    });
   
-    if (navState === 'all') {
-      html = changeRender(todos);
-    } else if (navState === 'active') {
-      html = changeRender(todos.filter(function (todo) {
-        return !todo.completed;
-      }));
-    } else {
-      html = changeRender(todos.filter(function (todo) {
-        return todo.completed;
-      }));
-    }
+    _todos.forEach(function (_ref) {
+      var id = _ref.id,
+          content = _ref.content,
+          completed = _ref.completed;
+      html += "<li id=\"".concat(id, "\" class=\"todo-item\">\n    <input class=\"custom-checkbox\" type=\"checkbox\"").concat(completed ? 'checked' : '', " id=\"ck-").concat(id, "\">\n    <label for=\"ck-").concat(id, "\"> ").concat(content, " </label>\n    <i class=\"remove-todo far fa-times-circle\"></i>\n    </li>");
+    });
   
     $todos.innerHTML = html;
-    $clearLength.innerHTML = todos.filter(function (todo) {
+    $clearTodoLength.innerHTML = todos.filter(function (todo) {
       return todo.completed;
     }).length;
-    $activeTodo.innerHTML = todos.filter(function () {
+    $activeTodoLength.innerHTML = todos.filter(function () {
       return todos;
     }).length;
-  } // 새로운 배열 추가
-  
-  
-  function generateId() {
-    return todos.length ? Math.max.apply(Math, _toConsumableArray(todos.map(function (todo) {
-      return todo.id;
-    }))) + 1 : 1;
   } // Todo 가져오기
   
   
@@ -10327,6 +10329,13 @@
     .then(function (res) {
       return res.json();
     }).then(render)["catch"](console.error);
+  } // 새로운 배열 추가
+  
+  
+  function generateId() {
+    return todos.length ? Math.max.apply(Math, _toConsumableArray(todos.map(function (todo) {
+      return todo.id;
+    }))) + 1 : 1;
   } // Todo 추가하기
   
   
@@ -10460,7 +10469,7 @@
   // 클릭시 체크된 todo 삭제
   
   
-  $btn.onclick = function () {
+  $clearCompleted.onclick = function () {
     // todos = todos.filter(todo => todo.completed !== true);
     clearAll();
   }; // $btn.addEventListener('click', (e) => {
