@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Todo } from './todo-interface';
+import { Tab } from './tab-interface';
 
 @Component({
   selector: 'app-todos',
@@ -7,14 +8,10 @@ import { Todo } from './todo-interface';
     <div class="container">
       <h1 class="title">Todos</h1>
       <div class="ver">4.0</div>
-
       <input class="input-todo" placeholder="What needs to be done?" autofocus (keyup.enter)="addTodo(content)" #content>
-      <ul class="nav" (click)="activeTab($event.target)">
-        <li id="all" [ngClass]="{active: navState=='all'}">All</li>
-        <li id="active" [ngClass]="{active: navState=='active'}">Active</li>
-        <li id="completed" [ngClass]="{active: navState=='completed'}">Completed</li>
+      <ul class="nav">
+        <li id="{{tab.id}}" *ngFor="let tab of Tabs" [ngClass]="{active: navState===tab.id}" (click)="activeTab(tab.id)">{{tab.id}}</li>
       </ul>
-
       <ul class="todos">
         <li id="{{todo.id}}" class="todo-item" *ngFor="let todo of Todos()">
           <input class="custom-checkbox" type="checkbox" id="ck-{{todo.id}}" [checked]="todo.completed" (change)="completeTodo(todo.id)">
@@ -238,16 +235,22 @@ export class TodosComponent {
     { id: 3, content: "Javascript", completed: true }
   ];
 
-  navState = 'all';
+  Tabs: Tab[] = [
+    { id: 'All', active: true },
+    { id: 'Active', active: false },
+    { id: 'Completed', active: false }
+  ]
+
+  navState = 'All';
 
   Todos() {
-    if (this.navState==='active') { return this.todos.filter( todo => !todo.completed ); }
-    if (this.navState==='completed') { return this.todos.filter( todo => todo.completed ); }
+    if (this.navState==='Active') { return this.todos.filter( todo => !todo.completed ); }
+    if (this.navState==='Completed') { return this.todos.filter( todo => todo.completed ); }
     return this.todos;
   }
 
-  activeTab(e: HTMLLIElement) {
-    this.navState = e.id;
+  activeTab(id: string) {
+    this.navState = id;    
   }
     
   generateId() {
@@ -255,14 +258,13 @@ export class TodosComponent {
   }
 
   addTodo(content: HTMLInputElement) {
-    if (content.value === '') return;
+    if (!content.value.trim()) return;
     this.todos = [{ id: this.generateId(), content: content.value, completed: false }, ...this.todos];
     content.value = '';
   }
 
   completeTodo(id: number) {
     this.todos = this.todos.map( todo => todo.id === id ? { ...todo, completed: !todo.completed } : todo );
-    
   }
 
   removeTodo(id: number) {
@@ -278,7 +280,7 @@ export class TodosComponent {
   }
 
   selectAll(select: HTMLInputElement) {
-    this.todos = this.todos.map( todo => select.checked ? { ...todo, completed: true} : { ...todo, completed: false });
+    this.todos = this.todos.map( todo => select.checked ? { ...todo, completed: true} : { ...todo, completed: false } );
   }
 
   everyselect() {
