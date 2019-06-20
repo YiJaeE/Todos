@@ -251,7 +251,7 @@ export class TodosComponent {
   }
     
   generateId() {
-    return this.todos.length ? Math.max(...this.todos.map( todo => todo.id)) + 1 : 1;
+    return this.todos.length ? Math.max(...this.todos.map( todo => todo.id )) + 1 : 1;
   }
 
   addTodo(content: HTMLInputElement) {
