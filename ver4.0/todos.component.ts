@@ -21,7 +21,7 @@ import { Tab } from './tab-interface';
       </ul>
       <div class="footer">
         <div class="complete-all">
-          <input class="custom-checkbox" type="checkbox" id="ck-complete-all" (change)="selectAll(select)" [checked]="everyselect()" #select>
+          <input class="custom-checkbox" type="checkbox" id="ck-complete-all" (change)="selectAll(select)" [checked]="everySelect()" #select>
           <label for="ck-complete-all">Mark all as complete</label>
         </div>
         <div class="clear-completed">
@@ -283,7 +283,7 @@ export class TodosComponent {
     this.todos = this.todos.map( todo => select.checked ? { ...todo, completed: true} : { ...todo, completed: false } );
   }
 
-  everyselect() {
+  everySelect() {
     return this.todos.every( todo => todo.completed );
   }
 
