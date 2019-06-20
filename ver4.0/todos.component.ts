@@ -24,7 +24,7 @@ import { Todo } from './todo-interface';
       </ul>
       <div class="footer">
         <div class="complete-all">
-          <input class="custom-checkbox" type="checkbox" id="ck-complete-all" (change)="selectAll($event.target)" [checked]="everyselect()">
+          <input class="custom-checkbox" type="checkbox" id="ck-complete-all" (change)="selectAll(select)" [checked]="everyselect()" #select>
           <label for="ck-complete-all">Mark all as complete</label>
         </div>
         <div class="clear-completed">
@@ -277,8 +277,8 @@ export class TodosComponent {
     return this.todos.filter( todo => todo.completed ).length;
   }
 
-  selectAll(e: HTMLInputElement) {
-    this.todos = this.todos.map( todo => e.checked ? { ...todo, completed: true} : { ...todo, completed: false });
+  selectAll(select: HTMLInputElement) {
+    this.todos = this.todos.map( todo => select.checked ? { ...todo, completed: true} : { ...todo, completed: false });
   }
 
   everyselect() {
