@@ -241,9 +241,9 @@ export class TodosComponent {
   navState = 'all';
 
   Todos() {
-    if (this.navState==='all') { return this.todos; }
     if (this.navState==='active') { return this.todos.filter( todo => !todo.completed ); }
     if (this.navState==='completed') { return this.todos.filter( todo => todo.completed ); }
+    return this.todos;
   }
 
   activeTab(e: HTMLLIElement) {
