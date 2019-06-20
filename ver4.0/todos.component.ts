@@ -9,10 +9,10 @@ import { Todo } from './todo-interface';
       <div class="ver">4.0</div>
 
       <input class="input-todo" placeholder="What needs to be done?" autofocus (keyup.enter)="addTodo(content)" #content>
-      <ul class="nav">
-        <li id="all" [ngClass]="{active: navState=='all'}" (click)="activeTab($event.target)">All</li>
-        <li id="active" [ngClass]="{active: navState=='active'}" (click)="activeTab($event.target)">Active</li>
-        <li id="completed" [ngClass]="{active: navState=='completed'}" (click)="activeTab($event.target)">Completed</li>
+      <ul class="nav" (click)="activeTab($event.target)">
+        <li id="all" [ngClass]="{active: navState=='all'}">All</li>
+        <li id="active" [ngClass]="{active: navState=='active'}">Active</li>
+        <li id="completed" [ngClass]="{active: navState=='completed'}">Completed</li>
       </ul>
 
       <ul class="todos">
