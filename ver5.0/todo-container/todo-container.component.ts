@@ -25,10 +25,8 @@ import { Tab } from '../tab-type'
 export class TodoContainerComponent {
 
   todos: Todo[];
-
   Tabs: Tab[] = ['All', 'Active', 'Completed'];
-
-  navState: Tab= 'All';
+  navState: Tab = 'All';
 
   constructor() {
     this.getTodos();
