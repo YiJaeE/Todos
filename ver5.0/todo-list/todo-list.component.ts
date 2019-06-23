@@ -16,7 +16,8 @@ import { Tab } from '../tab-type'
     <ng-template #loading><div class="loader">Loading...</div></ng-template>
   `,
   styleUrls: [
-    '../todo-style.css', '../spinner.style.css'
+    '../todo-style.css',
+    '../spinner.style.css'
   ]
 })
 export class TodoListComponent {
