@@ -9,3 +9,7 @@
 [0619 Todos ver 4.0](https://github.com/cool232000/Todos/tree/master/ver4.0)  
 
 [0621 Todos ver 5.0](https://github.com/cool232000/Todos/tree/master/ver5.0)  
+
+[0701 Todos ver 6.0](https://github.com/cool232000/Todos/tree/master/ver6.0)  
+
+[0702 Todos ver 7.0](https://github.com/cool232000/Todos/tree/master/ver7.0)  
